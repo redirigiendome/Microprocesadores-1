@@ -1,0 +1,12 @@
+“Toggle” significa:
+
+  cada vez que presionas el botón → cambia el estado
+
+estaba apagado → se enciende
+
+estaba encendido → se apaga
+
+  No depende de si mantienes presionado, sino del clic
+
+PB5 ── resistencia ── LED ── GND
+PB0 ── botón ── GND
