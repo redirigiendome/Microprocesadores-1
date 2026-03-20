@@ -1,0 +1,56 @@
+.include "m328pdef.inc"
+
+.equ PIN_BTN = 0
+
+.def contador = r17
+
+.org 0x00
+rjmp inicio
+
+inicio:
+    ldi r16, 0x7F
+    out DDRD, r16
+
+    cbi DDRB, PIN_BTN
+    sbi PORTB, PIN_BTN
+
+    clr contador
+
+loop:
+    rcall mostrar
+
+    sbic PINB, PIN_BTN
+    rjmp loop
+
+    inc contador
+    cpi contador, 10
+    brne seguir
+    clr contador
+
+seguir:
+espera:
+    sbis PINB, PIN_BTN
+    rjmp espera
+
+    rjmp loop
+
+mostrar:
+    ldi ZH, high(tabla<<1)
+    ldi ZL, low(tabla<<1)
+
+    add ZL, contador
+    lpm r18, Z
+    out PORTD, r18
+    ret
+
+tabla:
+.db 0b00111111
+.db 0b00000110
+.db 0b01011011
+.db 0b01001111
+.db 0b01100110
+.db 0b01101101
+.db 0b01111101
+.db 0b00000111
+.db 0b01111111
+.db 0b01101111
