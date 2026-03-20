@@ -1,0 +1,41 @@
+.include "m328pdef.inc"     ; Definiciones del ATmega328P (registros y bits)
+
+.equ PIN_LED = 5            ; LED en PB5
+.equ PIN_BTN = 0            ; Boton en PB0
+
+.def estado = r17           ; Registro que guarda el estado del LED (0 = apagado, 1 = encendido)
+
+.org 0x00                   ; Vector de reset
+rjmp inicio                 ; Salta al inicio del programa
+
+inicio:
+    ldi r16, (1<<PIN_LED)  ; r16 = 0b00100000 -> configura PB5
+
+    out DDRB, r16          ; PB5 como salida (los demas pines quedan como entrada)
+
+    cbi DDRB, PIN_BTN      ; Configura PB0 como entrada (REDUNDANTE por la linea anterior)
+    sbi PORTB, PIN_BTN     ; Activa pull-up interno (boton = 1 sin presionar)
+
+    clr estado             ; estado = 0 (LED inicia apagado)
+
+loop:
+    sbic PINB, PIN_BTN     ; Si boton presionado (0) NO salta
+                           ; Si NO presionado (1) salta la siguiente instruccion
+
+    rjmp loop              ; Espera hasta que el boton sea presionado
+
+    com estado             ; Invierte TODOS los bits de estado (no solo el bit 0)
+
+    sbrc estado, 0         ; Si bit 0 = 0, salta la siguiente instruccion
+    sbi PORTB, PIN_LED     ; Enciende LED si bit 0 = 1
+
+    sbrs estado, 0         ; Si bit 0 = 1, salta la siguiente instruccion
+    cbi PORTB, PIN_LED     ; Apaga LED si bit 0 = 0
+
+espera:
+    sbis PINB, PIN_BTN     ; Si boton NO presionado (1), salta
+                           ; Si sigue presionado (0), no salta
+
+    rjmp espera            ; Espera hasta soltar el boton
+
+    rjmp loop              ; Vuelve al loop principal
