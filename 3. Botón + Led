@@ -1,0 +1,28 @@
+.include "m328pdef.inc"     ; Definiciones del ATmega328P (registros y bits)
+
+.equ PIN_LED = 5            ; LED en PB5
+.equ PIN_BTN = 0            ; Boton en PB0
+
+.org 0x00                   ; Vector de reset
+rjmp inicio                 ; Salta al inicio
+
+inicio:
+    ldi r16, (1<<PIN_LED)  ; r16 = 0b00100000 -> configura solo PB5
+
+    out DDRB, r16          ; PB5 como salida, PERO todos los demas pines quedan como entrada
+
+    cbi DDRB, PIN_BTN      ; Asegura que PB0 sea entrada (esto es redundante por la linea anterior)
+    sbi PORTB, PIN_BTN     ; Activa pull-up interno en PB0 (el boton estara en HIGH sin presionar)
+
+loop:
+    sbic PINB, PIN_BTN     ; Si el bit es 0 (boton presionado), NO salta
+                           ; Si el bit es 1 (boton NO presionado), salta la siguiente instruccion
+
+    rjmp apagar            ; Salta a apagar SOLO si el boton NO esta presionado
+
+    sbi PORTB, PIN_LED     ; Enciende el LED si el boton esta presionado
+    rjmp loop              ; Vuelve al loop
+
+apagar:
+    cbi PORTB, PIN_LED     ; Apaga el LED
+    rjmp loop              ; Vuelve al loop
