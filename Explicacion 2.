@@ -1,0 +1,4 @@
+PB5 ── resistencia ── LED ── GND
+PB5 (pin físico 19 en el chip) → resistencia → LED → GND
+
+GND del circuito conectado
