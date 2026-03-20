@@ -1,0 +1,17 @@
+;CODIGO SOLO PARA PRENDER 1 LED
+.include "m328pdef.inc"     ; Incluye definiciones del ATmega328P (registros, bits, etc.)
+
+.equ PIN_LED = 5            ; Define constante: el LED esta en PB5 (Arduino pin 13)
+
+.org 0x00                   ; Inicio de memoria de programa (reset vector)
+rjmp inicio                 ; Salta a la rutina principal
+
+inicio:
+    ldi r16, (1<<PIN_LED)  ; r16 = 0b00100000 -> solo activa el bit 5
+
+    out DDRB, r16          ; Configura PB5 como salida (PERO pone los demas pines en entrada)
+
+    sbi PORTB, PIN_LED     ; Enciende el LED (pone PB5 en alto)
+
+loop:
+    rjmp loop              ; Bucle infinito (el programa no hace nada mas)
