@@ -1,0 +1,16 @@
+1. LED SIEMPRE ENCENDIDO
+  CONEXIÓN
+
+PB5 "(pin físico 19 en el chip)" → resistencia → LED → GND
+
+GND del circuito conectado
+
+Orden correcto:
+
+PB5 ── resistencia ── LED ── GND
+
+El LED tiene polaridad:
+
+pata larga → hacia el pin
+
+pata corta → GND
