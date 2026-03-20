@@ -1,0 +1,8 @@
+LED (igual que antes)
+PB5 ── resistencia ── LED ── GND
+BOTÓN
+PB0 ── botón ── GND
+
+No se pone resistencia externa
+el código usa pull-up interno, lo cual no es recomendable.
+Por lo que si puedes cambiar adelante
